@@ -2,9 +2,9 @@
 
 This program is a powerful tool and an excellent assistant for reverse engineering professionals. With its help, you can easily determine the bit depth and type of program without thinking about which decompiler to choose. It is enough to simply transfer the target file to CMRev through the context menu, and the program itself will determine which decompiler to launch (for example, IDA Pro or dnSpy).
 
-
-![](https://github.com/vexorus/CMRev/blob/main/Image1.png)
-![](https://github.com/vexorus/CMRev/blob/main/Image.png)
+<p align="center">
+  <img src="https://github.com/vexorus/CMRev/blob/main/Image1.png" />
+</p>
 
 
 ## How to use?
