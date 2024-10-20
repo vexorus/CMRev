@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -27,22 +28,25 @@ namespace CMRev
                 }
                 else if (args.Length >= 1)
                 {
+
                     string configPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CMRev.txt";
                     if (File.Exists(configPath))
                     {
                         string[] configData = File.ReadAllLines(configPath);
                         string IDA64path = configData[0];
                         string IDA32path = configData[1];
-                        string dnSpy32path = configData[2];
-                        string dnSpy64path = configData[3];
+                        string dnSpy64path = configData[2];
+                        string dnSpy32path = configData[3];
                         string DIEpath = configData[4];
                         bool DIErun = false;
                         if (configData[5] == "True")
                         {
                             DIErun = true;
                         }
-                        string filePath = args[0];
-                        string fileType = GetTypeFile(File.ReadAllBytes(filePath));
+                        string filePath = Environment.GetCommandLineArgs()[1];
+                        byte[] fileBytes = File.ReadAllBytes(filePath);
+                        string fileType = GetTypeFile(fileBytes);
+                        filePath = $"\"{filePath}\"";
                         if (DIErun)
                         {
                             Process.Start(DIEpath, filePath);
@@ -56,7 +60,7 @@ namespace CMRev
                                 Process.Start(IDA64path, filePath);
                                 break;
                             case "PE64":
-                                if (IsNET(File.ReadAllText(filePath)))
+                                if (IsNET(Encoding.Default.GetString(fileBytes)))
                                 {
                                     Process.Start(dnSpy64path, filePath);
                                 }
@@ -66,7 +70,7 @@ namespace CMRev
                                 }
                                 break;
                             case "PE32":
-                                if (IsNET(File.ReadAllText(filePath)))
+                                if (IsNET(Encoding.Default.GetString(fileBytes)))
                                 {
                                     Process.Start(dnSpy32path, filePath);
                                 }

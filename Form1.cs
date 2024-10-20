@@ -154,8 +154,21 @@ namespace CMRev
             try
             {
                 RegistryKey regKey = Registry.ClassesRoot.OpenSubKey("*").OpenSubKey("shell", true);
-                regKey.DeleteSubKeyTree("CMRev");
-                MetroFramework.MetroMessageBox.Show(this, "Success. CMRev removed from context menu", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (regKey.OpenSubKey("CMRev") == null)
+                {
+                    MetroFramework.MetroMessageBox.Show(this, $"CMRev has already been deleted", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    if (!IsAdmin())
+                    {
+                        MetroFramework.MetroMessageBox.Show(this, $"The program will restart with administrator rights. After restarting, press the button again.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        RunAsAdmin(Assembly.GetExecutingAssembly().Location, "");
+                        Process.GetCurrentProcess().Kill();
+                    }
+                    regKey.DeleteSubKeyTree("CMRev");
+                    MetroFramework.MetroMessageBox.Show(this, "Success. CMRev removed from context menu", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch
             {
